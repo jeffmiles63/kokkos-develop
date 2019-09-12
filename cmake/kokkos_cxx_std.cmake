@@ -63,7 +63,7 @@ ENDFUNCTION()
 #XL: IBM XL version 10.1 through 13.1.5.
 
 #This can run at any time
-KOKKOS_OPTION(CXX_STANDARD "" STRING "The C++ standard for Kokkos to use: 11, 14, or 17. In some cases, intermediate standards 1Y, 1Z, or 2A are also supported.")
+KOKKOS_OPTION(CXX_STANDARD "" STRING "The C++ standard for Kokkos to use: 11, 14, or 17. In some cases, intermediate standards 1Y, 1Z, or 2A are also supported." DEFAULT)
 
 # Set CXX standard flags
 SET(KOKKOS_ENABLE_CXX11 OFF)

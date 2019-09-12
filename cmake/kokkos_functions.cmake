@@ -4,12 +4,17 @@
 
 # Validate options are given with correct case and define an internal
 # upper-case version for use within 
-FUNCTION(kokkos_option CAMEL_SUFFIX DEFAULT TYPE DOCSTRING)
+FUNCTION(KOKKOS_OPTION CAMEL_SUFFIX DEFAULT TYPE DOCSTRING OVERRIDE)
   SET(CAMEL_NAME Kokkos_${CAMEL_SUFFIX})
   STRING(TOUPPER ${CAMEL_NAME} UC_NAME)
 
   # Make sure this appears in the cache with the appropriate DOCSTRING
-  SET(${CAMEL_NAME} ${DEFAULT} CACHE ${TYPE} ${DOCSTRING})
+  IF ("${OVERRIDE}" STREQUAL "OVERRIDE")
+     MESSAGE(STATUS "Overriding ${CAMEL_NAME} with ${DEFAULT}")
+     SET(${CAMEL_NAME} ${DEFAULT} CACHE ${TYPE} ${DOCSTRING} FORCE)
+  ELSE()
+     SET(${CAMEL_NAME} ${DEFAULT} CACHE ${TYPE} ${DOCSTRING})
+  ENDIF()
 
   #I don't love doing it this way because it's N^2 in number options, but cest la vie
   FOREACH(opt ${KOKKOS_GIVEN_VARIABLES})
@@ -23,8 +28,10 @@ FUNCTION(kokkos_option CAMEL_SUFFIX DEFAULT TYPE DOCSTRING)
 
   #okay, great, we passed the validation test - use the default
   IF (DEFINED ${CAMEL_NAME})
+    MESSAGE(STATUS "Setting ${UC_NAME} from ${CAMEL_NAME}=${${CAMEL_NAME}}")
     SET(${UC_NAME} ${${CAMEL_NAME}} PARENT_SCOPE)
   ELSE()
+    MESSAGE(STATUS "Setting ${UC_NAME} from DEFAULT = ${DEFAULT}")
     SET(${UC_NAME} ${DEFAULT} PARENT_SCOPE)
   ENDIF()
 
